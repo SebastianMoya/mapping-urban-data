@@ -48,6 +48,7 @@ const state = {
   hoverId: null,
   selected: null, // { id, props, lngLat }
   fallbackBasemap: false,
+  styleReady: false, // the style JSON has loaded (tiles may still be on their way)
 };
 
 const t = () => STRINGS[state.lang];
@@ -87,6 +88,7 @@ map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
 if (map.getPitch() > 0) state.is3d = true;
 
 map.on('style.load', () => {
+  state.styleReady = true;
   const layers = map.getStyle().layers;
   // The lots replace the basemap's own building footprints.
   for (const l of layers) {
@@ -105,9 +107,10 @@ map.on('style.load', () => {
   if (state.selected) setSelected(state.selected.id, true);
 });
 
-// Keep the lots on screen even when the basemap service cannot be reached.
+// Keep the lots on screen even when the basemap style itself cannot be fetched. Errors after the
+// style has loaded (a slow tile, an aborted request) are not a reason to drop the basemap.
 map.on('error', (e) => {
-  if (state.fallbackBasemap || map.isStyleLoaded()) return;
+  if (state.fallbackBasemap || state.styleReady) return;
   console.warn('Basemap unavailable, using a plain background.', e.error);
   state.fallbackBasemap = true;
   map.setStyle(fallbackStyle(resolvedTheme()));
@@ -119,7 +122,8 @@ function setBasemap() {
   renderLegend();
   renderPopup();
   const style = state.fallbackBasemap ? fallbackStyle(theme) : BASEMAPS[theme];
-  if (map.loaded() || map.isStyleLoaded()) map.setStyle(style, { diff: false });
+  state.styleReady = false;
+  map.setStyle(style, { diff: false });
 }
 
 // ---------------------------------------------------------------- hover + selection
