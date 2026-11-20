@@ -1,0 +1,62 @@
+{
+  "source": "NYC Department of City Planning, MapPLUTO 18v2.1 (Manhattan, BoroCode 1)",
+  "totalLots": 42483,
+  "totalLotAreaSqFt": 493883031,
+  "groups": {
+    "01": {
+      "lots": 4021,
+      "lotAreaSqFt": 7238879,
+      "lotAreaShare": 0.0147
+    },
+    "02-03": {
+      "lots": 16373,
+      "lotAreaSqFt": 107488893,
+      "lotAreaShare": 0.2176
+    },
+    "04": {
+      "lots": 11807,
+      "lotAreaSqFt": 71355804,
+      "lotAreaShare": 0.1445
+    },
+    "05": {
+      "lots": 4410,
+      "lotAreaSqFt": 47546371,
+      "lotAreaShare": 0.0963
+    },
+    "06": {
+      "lots": 713,
+      "lotAreaSqFt": 4493043,
+      "lotAreaShare": 0.0091
+    },
+    "07": {
+      "lots": 432,
+      "lotAreaSqFt": 33313315,
+      "lotAreaShare": 0.0675
+    },
+    "08": {
+      "lots": 2430,
+      "lotAreaSqFt": 55228989,
+      "lotAreaShare": 0.1118
+    },
+    "09": {
+      "lots": 459,
+      "lotAreaSqFt": 117892541,
+      "lotAreaShare": 0.2387
+    },
+    "10": {
+      "lots": 625,
+      "lotAreaSqFt": 5591432,
+      "lotAreaShare": 0.0113
+    },
+    "11": {
+      "lots": 1081,
+      "lotAreaSqFt": 36301030,
+      "lotAreaShare": 0.0735
+    },
+    "nd": {
+      "lots": 132,
+      "lotAreaSqFt": 7432734,
+      "lotAreaShare": 0.015
+    }
+  }
+}

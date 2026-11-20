@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Manhattan land use</title>
+    <meta name="description" content="Interactive map of land use for every tax lot in Manhattan, built with MapLibre GL JS, PMTiles and NYC MapPLUTO." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div id="map" role="region" aria-label="Map"></div>
+
+    <aside class="panel" id="panel" data-collapsed="true">
+      <header class="panel-head">
+        <h1 data-i18n="title">Manhattan land use</h1>
+        <p class="subtitle" id="subtitle"></p>
+      </header>
+
+      <div class="search" role="search">
+        <label for="search" class="visually-hidden" data-i18n="searchLabel">Search an address in Manhattan</label>
+        <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m12.6 12.6 4.4 4.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input
+          id="search"
+          type="search"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-controls="search-results"
+          aria-expanded="false"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <ul id="search-results" class="search-results" role="listbox" hidden></ul>
+        <p id="search-status" class="search-status" role="status" hidden></p>
+      </div>
+
+      <button class="sheet-toggle" id="sheet-toggle" type="button" aria-controls="legend" aria-expanded="false">
+        <span id="sheet-toggle-label">Show legend</span>
+        <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <section class="legend" id="legend" aria-labelledby="legend-title">
+        <div class="legend-head">
+          <h2 id="legend-title" data-i18n="legendTitle">Land use</h2>
+          <button type="button" class="link-button" id="show-all" hidden data-i18n="showAll">Show all uses</button>
+        </div>
+        <p class="legend-hint" data-i18n="legendHint"></p>
+        <div class="strip" id="strip" aria-hidden="true"></div>
+        <ul class="legend-list" id="legend-list"></ul>
+      </section>
+
+      <footer class="panel-foot">
+        <div class="controls">
+          <div class="segmented" role="group" id="view-group">
+            <button type="button" data-view="2d" aria-pressed="true">2D</button>
+            <button type="button" data-view="3d" aria-pressed="false">3D</button>
+          </div>
+          <div class="segmented" role="group" id="theme-group">
+            <button type="button" data-theme-option="auto" aria-pressed="true" data-i18n="themeAuto">Auto</button>
+            <button type="button" data-theme-option="light" aria-pressed="false" data-i18n="themeLight">Light</button>
+            <button type="button" data-theme-option="dark" aria-pressed="false" data-i18n="themeDark">Dark</button>
+          </div>
+        </div>
+        <p class="view-hint" id="view-hint" data-i18n="view3dHint" hidden></p>
+        <div class="foot-row">
+          <div class="segmented" role="group" id="lang-group">
+            <button type="button" data-lang="es" aria-pressed="false" lang="es">ES</button>
+            <button type="button" data-lang="en" aria-pressed="true" lang="en">EN</button>
+          </div>
+          <button type="button" class="link-button" id="about-open" data-i18n="about">About this map</button>
+        </div>
+      </footer>
+    </aside>
+
+    <dialog id="about" aria-labelledby="about-title">
+      <h2 id="about-title" data-i18n="about">About this map</h2>
+      <p data-i18n="aboutBody"></p>
+      <p data-i18n="aboutBy"></p>
+      <p><a href="https://github.com/" id="repo-link" data-i18n="sourceCode" target="_blank" rel="noopener">Source code on GitHub</a></p>
+      <form method="dialog"><button class="button" data-i18n="close">Close</button></form>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
