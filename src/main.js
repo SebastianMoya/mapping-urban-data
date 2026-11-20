@@ -157,6 +157,24 @@ function renderPopup() {
   if (!popup.isOpen()) popup.addTo(map);
 }
 
+// Pan just enough for the whole lot card to sit inside the visible map (clear of the panel).
+function keepPopupInView() {
+  const el = popup.getElement();
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  const c = map.getContainer().getBoundingClientRect();
+  const pad = map.getPadding();
+  const m = 12;
+  const box = { top: c.top + m, bottom: c.bottom - pad.bottom - m, left: c.left + pad.left + m, right: c.right - m };
+  let dx = 0;
+  let dy = 0;
+  if (r.bottom > box.bottom) dy = r.bottom - box.bottom;
+  if (r.top - dy < box.top) dy = r.top - box.top; // a card taller than the view keeps its top visible
+  if (r.right > box.right) dx = r.right - box.right;
+  if (r.left - dx < box.left) dx = r.left - box.left;
+  if (dx || dy) map.panBy([dx, dy], { duration: reducedMotion.matches ? 0 : 350 });
+}
+
 function openLotAt(lngLat) {
   const point = map.project(lngLat);
   const [f] = map.queryRenderedFeatures(point, { layers: visibleLayers() });
@@ -165,6 +183,7 @@ function openLotAt(lngLat) {
   state.selected = { id: f.id, props: f.properties, lngLat };
   setSelected(f.id, true);
   renderPopup();
+  requestAnimationFrame(keepPopupInView);
   return true;
 }
 
