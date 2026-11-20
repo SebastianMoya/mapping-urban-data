@@ -80,6 +80,7 @@ src/main.js             map setup, interaction, state
 src/layers.js           palette and MapLibre layers (2D, 3D, outlines, highlight)
 src/popup.js            lot card
 src/geocoder.js         NYC GeoSearch autocomplete
+src/pmtiles-source.js   PMTiles reader that copes with CDN responses ignoring Range
 src/i18n.js             Spanish and English strings
 src/style.css           UI styles, light and dark
 public/data/            mn_lots.pmtiles

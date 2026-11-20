@@ -1,7 +1,7 @@
 import * as maplibregl from 'maplibre-gl';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Protocol } from 'pmtiles';
+import { PMTiles, Protocol } from 'pmtiles';
 import '@fontsource-variable/archivo/wdth.css';
 import './style.css';
 
@@ -13,6 +13,7 @@ import {
 } from './layers.js';
 import { lotCard } from './popup.js';
 import { createGeocoder } from './geocoder.js';
+import { StaticHostSource } from './pmtiles-source.js';
 
 const REPO_URL = 'https://github.com/SebastianMoya/mapping-urban-data';
 const BASEMAPS = {
@@ -20,10 +21,12 @@ const BASEMAPS = {
   dark: 'https://tiles.openfreemap.org/styles/dark',
 };
 const DETAIL_ZOOM = 14; // tiles carry every lot attribute from z14
-const PMTILES_URL = `pmtiles://${new URL(`${import.meta.env.BASE_URL}data/mn_lots.pmtiles`, location.href).href}`;
+const ARCHIVE_URL = new URL(`${import.meta.env.BASE_URL}data/mn_lots.pmtiles`, location.href).href;
+const PMTILES_URL = `pmtiles://${ARCHIVE_URL}`;
 
 maplibregl.setWorkerUrl(workerUrl);
 const protocol = new Protocol();
+protocol.add(new PMTiles(new StaticHostSource(ARCHIVE_URL)));
 maplibregl.addProtocol('pmtiles', protocol.tile);
 
 const $ = (sel, root = document) => root.querySelector(sel);
