@@ -80,7 +80,14 @@ export function createGeocoder({ input, list, status, getStrings, onSelect }) {
       if (!res.ok) throw new Error(`GeoSearch ${res.status}`);
       const data = await res.json();
       if (id !== requestId) return; // a newer request already answered
-      results = (data.features || []).filter(inManhattan).slice(0, 6);
+      // GeoSearch returns aliases of one address (120 BROADWAY, 120 B'WAY): keep one per location.
+      const seen = new Set();
+      results = (data.features || []).filter(inManhattan).filter((f) => {
+        const key = f.geometry.coordinates.map((c) => c.toFixed(5)).join(',');
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }).slice(0, 6);
       active = results.length ? 0 : -1;
       render();
       setStatus(results.length ? '' : getStrings().searchEmpty);

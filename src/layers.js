@@ -56,7 +56,19 @@ export function filterFor(activeGroups) {
   return ['in', landUse, ['literal', codes]];
 }
 
-export function addLotLayers(map, { pmtilesUrl, theme, is3d, activeGroups, beforeId }) {
+// Where to slot the lots into a basemap: flat lots go under roads (streets read on top of
+// the blocks), extrusions go above every line layer so roads never paint over buildings.
+export function insertionPoints(layers) {
+  const isGround = (l) => l.type !== 'symbol' && ['transportation', 'aeroway'].includes(l['source-layer']);
+  const firstSymbol = layers.find((l) => l.type === 'symbol');
+  const flat = layers.find(isGround) ?? firstSymbol;
+  let lastNonSymbol = -1;
+  layers.forEach((l, i) => { if (l.type !== 'symbol') lastNonSymbol = i; });
+  const extrusion = layers[lastNonSymbol + 1];
+  return { flat: flat?.id, extrusion: extrusion?.id };
+}
+
+export function addLotLayers(map, { pmtilesUrl, theme, is3d, activeGroups, beforeId, beforeId3d }) {
   const dark = theme === 'dark';
   const ink = dark ? '#FFFFFF' : '#14213D';
   const noData = dark ? NO_DATA_DARK : COLOR_BY_CODE.nd;
@@ -107,7 +119,7 @@ export function addLotLayers(map, { pmtilesUrl, theme, is3d, activeGroups, befor
         'fill-extrusion-vertical-gradient': true,
       },
     },
-    beforeId,
+    beforeId3d,
   );
 
   // Lot boundaries appear once lots are big enough to read individually.

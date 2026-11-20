@@ -9,7 +9,7 @@ import stats from './data/landuse-stats.json';
 import { STRINGS, detectLang } from './i18n.js';
 import {
   LEGEND, INTERACTIVE_LAYERS, SOURCE_ID, SOURCE_LAYER,
-  addLotLayers, setLotFilter, setLotView, legendColor,
+  addLotLayers, insertionPoints, setLotFilter, setLotView, legendColor,
 } from './layers.js';
 import { lotCard } from './popup.js';
 import { createGeocoder } from './geocoder.js';
@@ -84,13 +84,19 @@ map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
 if (map.getPitch() > 0) state.is3d = true;
 
 map.on('style.load', () => {
-  const firstSymbol = map.getStyle().layers.find((l) => l.type === 'symbol');
+  const layers = map.getStyle().layers;
+  // The lots replace the basemap's own building footprints.
+  for (const l of layers) {
+    if (l['source-layer'] === 'building') map.setLayoutProperty(l.id, 'visibility', 'none');
+  }
+  const before = insertionPoints(layers);
   addLotLayers(map, {
     pmtilesUrl: PMTILES_URL,
     theme: resolvedTheme(),
     is3d: state.is3d,
     activeGroups: state.active,
-    beforeId: firstSymbol?.id,
+    beforeId: before.flat,
+    beforeId3d: before.extrusion,
   });
   state.hoverId = null;
   if (state.selected) setSelected(state.selected.id, true);
